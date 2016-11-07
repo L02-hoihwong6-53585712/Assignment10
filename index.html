@@ -1,39 +1,59 @@
- <html>
- <head>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.3/p5.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.sound.js"></script>
-   <script>
-    
-    // an example using sound (which is not required for this assignment)
+<html>
 
-    var sound;
-    
-    function preload() 
-    {
-      sound = loadSound('pop.mp3');
-    }
-    
-    function setup() 
-    {
-       createCanvas(800, 600);
-       textAlign(CENTER);
-       fill(100);
-       noStroke();
-       text("Click to play sound", width/2, height/2);
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.3/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.4/addons/p5.sound.js"></script>
+    <script>
+
+var sound;
+var fft;
+
+function preload() {
+sound = loadSound('Rich Chigga - Dat $tick.mp3');
+
+}
+
+function setup() {
+createCanvas(500, 500);
+//colorMode(RGB);
+angleMode(DEGREES/2);
+background(100);
+sound.play();
+fft = new p5.FFT(0.9, 128);
+}
+
+function draw() {
+
+var spectrum = fft.analyze();
+
+translate(width / 2, height / 2);
+
+//beginShape();
+for (var i = 0; i < spectrum.length; i++) {
+  var angle = map(i,0,spectrum.length, 0, 360);
+  var amp = spectrum[i];
+  var r = map(amp, 100, 0, 100, 0);
+  var x = r * sin(angle);
+  var y = r * cos(angle);
+  fill(random(255), random(255), random(255))
+  stroke(i, i, i);
+  line(0, 0, x, y);
+  ellipse(x, y,r/2,r/2);
+
+}
+
+}
+
+function mouseClicked() {
+    if (sound.isPlaying()) {
+        sound.stop();
+    } else {
+        sound.play();
     }
 
-    function draw() 
-    {
-     
-    }
-    
-    function mouseClicked() 
-    { 
-       sound.play();
-       background(random(255), random(255), random(255));
-    }
+}
 
-   </script>
- </head>
- </html>
+    </script>
+</head>
 
+</html>
